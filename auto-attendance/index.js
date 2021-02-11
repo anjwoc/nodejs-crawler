@@ -14,7 +14,7 @@ function delay(time) {
  */
 const crawler = async () => {
   try {
-    const browser = await puppeteer.launch({ headless: false });
+    const browser = await puppeteer.launch({ headless: true });
     const page = await browser.newPage();
     const id = process.env.ID;
     const password = process.env.PASSWORD;

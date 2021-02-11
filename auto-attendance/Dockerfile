@@ -2,7 +2,7 @@ FROM node:14
 
 # WORKDIR /app
 
-RUN npm init -y
+COPY ./package.json ./
 COPY . .
 
 RUN npm install
