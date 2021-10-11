@@ -8,6 +8,8 @@ const crawler = async () => {
       ignoreDefaultArguments: true,
       ignoreHTTPSErrors: true,
       args: [
+        "--no-sandbox",
+        "--disable-setuid-sandbox",
         "--disable-web-security",
         "--user-data-dir",
         "--enable-usermedia-screen-capturing",

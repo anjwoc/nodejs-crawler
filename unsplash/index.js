@@ -1,17 +1,11 @@
-const puppeteer = require('puppeteer');
-const axios = require('axios');
-const fs = require('fs');
-
-function delay(time) {
-  return new Promise((resolve, reject) => {
-    setTimeout(resolve, time);
-  });
-}
+const puppeteer = require("puppeteer");
+const axios = require("axios");
+const fs = require("fs");
 
 // directory name
-fs.readdir('images', (err) => {
+fs.readdir("images", (err) => {
   if (err) {
-    fs.mkdirSync('images');
+    fs.mkdirSync("images");
   }
 });
 
@@ -27,7 +21,7 @@ const crawler = async (count) => {
   try {
     const browser = await puppeteer.launch({ headless: false });
     const page = await browser.newPage();
-    await page.goto('https://unsplash.com');
+    await page.goto("https://unsplash.com");
 
     let result = [];
     let idx = 1;
@@ -36,11 +30,11 @@ const crawler = async (count) => {
         // evaluate 안에는 window와 document 즉 Dom을 사용이 가능하다.
         window.scrollTo(0, 0);
         let srcs = [];
-        const imgSrcs = document.querySelectorAll('._2UGKr');
+        const imgSrcs = document.querySelectorAll("._2UGKr");
         if (imgSrcs.length) {
           // Array.from으로 변환을 시키지 않았을 때는 forEach로 사용 가능
           imgSrcs.forEach((v) => {
-            const img = v.querySelector('._2UpQX');
+            const img = v.querySelector("._2UpQX");
             if (img && img.src) {
               srcs.push(img.src);
             }
@@ -55,7 +49,7 @@ const crawler = async (count) => {
       });
 
       result = result.concat(images);
-      await page.waitForSelector('._2UGKr'); // 해당 선택자를 기다린다.
+      await page.waitForSelector("._2UGKr"); // 해당 선택자를 기다린다.
       console.log(`scrolling # ${idx++} image: ${images.length}개`);
     }
 
@@ -63,7 +57,7 @@ const crawler = async (count) => {
 
     result.forEach(async (src) => {
       const imgBuffer = await axios.get(src, {
-        responseType: 'arraybuffer',
+        responseType: "arraybuffer",
       });
       // 원본 확장자는 따로 확인해야 하고 파일 이름은 수정해서 사용
       fs.writeFileSync(`images/${new Date().valueOf()}.jpeg`, imgBuffer.data);
