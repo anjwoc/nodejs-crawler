@@ -21,6 +21,7 @@
   "dependencies": {
     "axios": "^0.21.1",
     "dotenv": "^8.2.0",
+    "pdf-lib": "^1.16.0",
     "puppeteer": "^7.0.4"
   },
   "devDependencies": {

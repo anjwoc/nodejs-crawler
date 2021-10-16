@@ -1,6 +1,7 @@
 const playwright = require("playwright");
 const path = require("path");
 const fs = require("fs");
+const merge = require("../util/pdf-merge");
 
 require("dotenv").config();
 
@@ -12,8 +13,8 @@ const scrollToElement = async (page, selector) => {
 };
 
 const autoScroll = async (page) => {
-  await page.evaluate(async () => {
-    await new Promise((resolve, reject) => {
+  await page.evaluate(() => {
+    return new Promise((resolve, reject) => {
       let totalHeight = 0;
       const distance = 300;
       const timer = setInterval(() => {
@@ -28,18 +29,6 @@ const autoScroll = async (page) => {
       }, 100);
     });
   });
-};
-
-const getElementByXpathValue = async (page, xPath, property) => {
-  const value = await page.evaluateHandle(
-    (xPath, property) => {
-      const element = document.evaluate(xPath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-      return element[property];
-    },
-    xPath,
-    property
-  );
-  return value;
 };
 
 const crawler = async () => {
@@ -68,6 +57,7 @@ const crawler = async () => {
     const firstChapter = await page.$(firstChapterPath);
     firstChapter.click();
 
+    let idx = 1;
     // 마지막 페이지에 도달할 때 까지 pdf로 변환
     while (true) {
       // 컨텐츠가 로딩되길 기다림
@@ -94,7 +84,7 @@ const crawler = async () => {
         .replace(/\t/g, " ")
         .replace(/    /g, " ");
 
-      const fileName = `${chapterTitle}.pdf`.replace(/[\{\}\[\]\/?,;:|\)*~`!^\+<>@\#$%&\\\=\(\'\"]/gi, "").replace(/\n/g, "");
+      const fileName = `${idx} ${chapterTitle}.pdf`.replace(/[\{\}\[\]\/?,;:|\)*~`!^\+<>@\#$%&\\\=\(\'\"]/gi, "").replace(/\n/g, "");
       const fullPath = path.resolve(dirPath, fileName);
       const height = await page.evaluate(() => document.documentElement.offsetHeight);
 
@@ -114,6 +104,7 @@ const crawler = async () => {
 
       await page.pdf({ path: fullPath, format: "A4", printBackground: true, margin: "none", height: height + "px" });
 
+      idx += 1;
       const nextPageBtn = await page.$("#next-page");
       if (!nextPageBtn) break;
 
@@ -121,8 +112,14 @@ const crawler = async () => {
       await page.goto(nextUrl);
     }
 
+    console.log("created pdf files.");
+    console.log("start merge pdf files.");
     await page.close();
     await browser.close();
+
+    merge()
+      .then(() => console.log("Done"))
+      .catch(() => console.log("Fail"));
   } catch (err) {
     console.error(err);
   }
