@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "debug": "node --inspect samatika/index.js"
+    "debug": "node --inspect video-crawler/index.js"
   },
   "repository": {
     "type": "git",
@@ -22,9 +22,8 @@
     "axios": "^0.21.1",
     "dotenv": "^8.2.0",
     "pdf-lib": "^1.16.0",
-    "puppeteer": "^7.0.4"
-  },
-  "devDependencies": {
-    "playwright": "^1.15.2"
+    "playwright": "^1.27.1",
+    "rimraf": "^3.0.2",
+    "web-ext": "^7.3.0"
   }
 }
