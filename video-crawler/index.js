@@ -31,17 +31,6 @@ const app = async () => {
     backgroundPage = await context.waitForEvent("backgroundpage");
   }
 
-  const page = await context.newPage();
-  await page.goto("https://fastcampus.app/");
-
-  await page.bringToFront();
-
-  // await page.click(".btn--md");
-
-  await page.waitForTimeout(2000);
-
-  await page.click(".curation-list-header__view-all");
-
   // await page.waitForTimeout(3000);
 
   // await context.close();
